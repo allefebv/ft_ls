@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process_s.c                                        :+:      :+:    :+:   */
+/*   ft_print_tree.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jfleury <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/09 12:04:24 by jfleury           #+#    #+#             */
-/*   Updated: 2019/01/16 18:29:12 by jfleury          ###   ########.fr       */
+/*   Created: 2019/08/13 15:52:14 by allefebv          #+#    #+#             */
+/*   Updated: 2019/08/13 17:17:38 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ft_ls.h"
 
-char	*ft_process_s(t_conv_spec conv_spec, va_list *ap)
+void	ft_print_path(void *content)
 {
-	char	*str;
-
-	(void)conv_spec;
-	if ((str = ft_strdup(va_arg(*ap, char*))) == NULL)
-		str = ft_strdup("(null)");
-	str = ft_precision_s(conv_spec, str);
-	return (str);
+	ft_printf("%s\n", (char*)((t_entry*)(content))->path);
 }

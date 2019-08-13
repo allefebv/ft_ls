@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file_mode.c                                        :+:      :+:    :+:   */
+/*   ft_file_mode.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: allefebv <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/30 17:41:30 by allefebv          #+#    #+#             */
-/*   Updated: 2019/07/31 16:08:50 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/12 14:36:56 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char	file_mode(struct stat *my_stat)
+char	ft_file_mode(struct stat *my_stat)
 {
 	mode_t	val;
 
