@@ -6,7 +6,7 @@
 #    By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/31 12:31:28 by allefebv          #+#    #+#              #
-#    Updated: 2019/08/13 15:54:46 by allefebv         ###   ########.fr        #
+#    Updated: 2019/08/14 17:36:25 by allefebv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,13 +19,13 @@ CC			=	gcc
 CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 
 SRC			=	$(addprefix src/, ft_file_mode.c ft_lexer_parser.c	\
-				ft_main_loop.c ft_error.c main.c ft_three_trees.c	\
-				ft_sorts.c ft_print_tree.c)
+				ft_dir_management.c ft_error.c main.c			\
+				ft_three_trees.c ft_sorts.c ft_print_tree.c)
 
 OBJ			=	$(SRC:src/%.c=obj/%.o)
 OBJDIR		=	obj
 
-all: $(NAME)
+all: libft $(NAME)
 
 libft:
 	make -C libft/
@@ -33,10 +33,10 @@ libft:
 $(OBJDIR):
 	mkdir $(OBJDIR)
 
-obj/%.o: src/%.c
+$(OBJDIR)/%.o: src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ -c $<
 
-$(NAME): libft $(OBJDIR) $(OBJ)
+$(NAME): $(OBJDIR) $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIB)
 
 clean:

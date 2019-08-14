@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 12:29:48 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/13 17:16:36 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/14 20:12:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sys/stat.h>
 # include <dirent.h>
 # include <stdlib.h>
+# include <errno.h>
 # include "libft.h"
 
 # define OPTIONS "alrtR"
@@ -32,15 +33,22 @@ typedef struct	s_options
 typedef struct	s_trees_management
 {
 	t_tree		**errors;
+	int			count_errors;
 	t_tree		**files;
+	int			count_files;
 	t_tree		**dirs;
-	int			(*fptr)(void*, void*);
+	int			count_dirs;
+	int			(*fptr_sort)(void*, void*);
+	int			(*fptr_stat)(const char *, struct stat *);
+	void		(*fptr_print)(void *content);
+
 }				t_trees_management;
 
 typedef struct	s_entry
 {
 	char		*path;
 	char		*name;
+	char		*error;
 	DIR			*stream;
 	struct stat	info;
 }				t_entry;
@@ -50,12 +58,13 @@ typedef enum	e_errors
 	e_malloc_error,
 }				t_errors;
 
-char	file_mode(struct stat *file);
+char	ft_file_mode(struct stat *file);
 int		ft_lexer_parser(int argc, char **argv, t_options *options,
 			t_trees_management *trees);
-void	ft_read_dir(t_options *options, t_list *opr);
+int		ft_dir_management(t_trees_management *trees, t_options *options,
+			t_tree *dir);
 int		ft_error(t_errors error_type);
-int		ft_three_trees(t_list *opr, t_trees_management th_tr);
+int		ft_three_trees(t_list *opr, t_trees_management *trees);
 
 int		ft_name_sort(void *root_content, void *node_content);
 int		ft_time_name_sort(void *root_content, void *node_content);
@@ -63,5 +72,9 @@ int		ft_rev_name_sort(void *root_content, void *node_content);
 int		ft_rev_time_name_sort(void *root_content, void *node_content);
 
 void	ft_print_path(void *content);
+void	ft_print_line_long(void *content);
+void	ft_print_line_cr(void *content);
+void	ft_print_path_space(void *content);
+void	ft_print_errors(void *content);
 
 #endif
