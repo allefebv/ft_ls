@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 22:25:31 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/14 19:31:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/15 13:54:20 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ int	main(int argc, char **argv)
 	ft_bzero(&options, sizeof(t_options));
 	if (!ft_lexer_parser(argc, argv, &options, &trees))
 		return (ft_error(e_malloc_error));				//change error
-	ft_dir_management(&trees, &options, *trees.dirs);
+	ft_args_dir_management(&trees, &options, *trees.dirs);
 	return (0);
 }

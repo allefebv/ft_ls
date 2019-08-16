@@ -1,32 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_file_mode.c                                     :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/30 17:41:30 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/16 16:47:57 by allefebv         ###   ########.fr       */
+/*   Created: 2019/08/16 15:11:48 by allefebv          #+#    #+#             */
+/*   Updated: 2019/08/16 15:30:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char	ft_file_mode(mode_t mode)
+void	ft_check_dir_end(char **path)
 {
-	if (S_ISDIR(mode))
-		return ('d');
-	else if (S_ISFIFO(mode))
-		return ('p');
-	else if (S_ISCHR(mode))
-		return ('c');
-	else if (S_ISBLK(mode))
-		return ('b');
-	else if (S_ISREG(mode))
-		return ('-');
-	else if (S_ISLNK(mode))
-		return ('l');
-	else if (S_ISSOCK(mode))
-		return ('s');
-	return (0);
+	char	*tmp;
+
+	if ((*path)[ft_strlen(*path) - 1] != '/')
+	{
+		tmp = *path;
+		*path = ft_strjoin(*path, "/");
+		ft_strdel(&tmp);
+	}
 }

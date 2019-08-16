@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 12:29:48 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/14 20:12:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/16 16:46:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct	s_entry
 	char		*path;
 	char		*name;
 	char		*error;
+	char		type;
 	DIR			*stream;
 	struct stat	info;
 }				t_entry;
@@ -58,10 +59,10 @@ typedef enum	e_errors
 	e_malloc_error,
 }				t_errors;
 
-char	ft_file_mode(struct stat *file);
+char	ft_file_mode(mode_t mode);
 int		ft_lexer_parser(int argc, char **argv, t_options *options,
 			t_trees_management *trees);
-int		ft_dir_management(t_trees_management *trees, t_options *options,
+int		ft_args_dir_management(t_trees_management *trees, t_options *options,
 			t_tree *dir);
 int		ft_error(t_errors error_type);
 int		ft_three_trees(t_list *opr, t_trees_management *trees);
@@ -76,5 +77,7 @@ void	ft_print_line_long(void *content);
 void	ft_print_line_cr(void *content);
 void	ft_print_path_space(void *content);
 void	ft_print_errors(void *content);
+
+void	ft_check_dir_end(char **path);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/13 11:43:53 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/14 19:09:11 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/16 15:16:48 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,13 @@ static void	ft_file_tree(t_entry *entry, t_trees_management *trees)
 static void	ft_dir_tree(t_entry *entry, t_trees_management *trees)
 {
 	entry->stream = opendir(entry->path);
+	ft_check_dir_end(&entry->path);
 	ft_treeadd(trees->dirs, ft_treenew_ptr(entry), trees->fptr_sort);
 	(trees->count_dirs)++;
 }
 
 static int	ft_opr(t_list *opr, t_trees_management *trees, t_entry *entry)
 {
-	char	type;
-
 	while (opr)
 	{
 		if (!(entry = (t_entry*)malloc(sizeof(t_entry))))
@@ -45,8 +44,7 @@ static int	ft_opr(t_list *opr, t_trees_management *trees, t_entry *entry)
 			ft_error_tree(entry, trees);
 		else
 		{
-			type = ft_file_mode(&entry->info);
-			if (type == 'd')
+			if (S_ISDIR(entry->info.st_mode))
 				ft_dir_tree(entry, trees);
 			else
 				ft_file_tree(entry, trees);
