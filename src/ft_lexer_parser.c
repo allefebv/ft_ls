@@ -6,39 +6,39 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 17:18:18 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/16 15:29:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/18 14:51:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void	ft_chose_stat_print(t_options *options, t_trees_management *trees)
+static void	ft_chose_stat_print(t_ls *ls)
 {
-	if (options->l)
+	if (ls->options.l)
 	{
-		trees->fptr_stat = lstat;
-		trees->fptr_print = ft_print_line_long;
+		ls->fptr_stat = lstat;
+		ls->fptr_print = ft_print_line_long;
 	}
 	else
 	{
-		trees->fptr_stat = stat;
-		trees->fptr_print = ft_print_line_cr;
+		ls->fptr_stat = stat;
+		ls->fptr_print = ft_print_line_cr;
 	}
 }
 
-static void	ft_chose_sort(t_options *options, t_trees_management *trees)
+static void	ft_chose_sort(t_ls *ls)
 {
-	if (options->t && !options->r)
-		trees->fptr_sort = ft_time_name_sort;
-	else if (options->t && options->r)
-		trees->fptr_sort = ft_rev_time_name_sort;
-	else if (options->r)
-		trees->fptr_sort = ft_rev_name_sort;
+	if (ls->options.t && !ls->options.r)
+		ls->fptr_sort = ft_time_name_sort;
+	else if (ls->options.t && ls->options.r)
+		ls->fptr_sort = ft_rev_time_name_sort;
+	else if (ls->options.r)
+		ls->fptr_sort = ft_rev_name_sort;
 	else
-		trees->fptr_sort = ft_name_sort;
+		ls->fptr_sort = ft_name_sort;
 }
 
-static int	ft_check_options(char *value, t_options *options)
+static int	ft_check_options(char *value, t_ls *ls)
 {
 	int	i;
 
@@ -50,15 +50,15 @@ static int	ft_check_options(char *value, t_options *options)
 	while (value[i] != 0 && ft_strnchr(OPTIONS, value[i], ft_strlen(OPTIONS)))
 	{
 		if (value[i] == 'a')
-			options->a = 1;
+			ls->options.a = 1;
 		else if (value[i] == 'l')
-			options->l = 1;
+			ls->options.l = 1;
 		else if (value[i] == 'r')
-			options->r = 1;
+			ls->options.r = 1;
 		else if (value[i] == 't')
-			options->t = 1;
+			ls->options.t = 1;
 		else
-			options->r_cap = 1;
+			ls->options.r_cap = 1;
 		i++;
 	}
 	if (value[i])
@@ -66,7 +66,7 @@ static int	ft_check_options(char *value, t_options *options)
 	return (1);
 }
 
-int		ft_lexer_parser(int argc, char **argv, t_options *options,
+int		ft_lexer_parser(int argc, char **argv, t_ls *ls,
 			t_trees_management *trees)
 {
 	int		nb;
@@ -78,7 +78,7 @@ int		ft_lexer_parser(int argc, char **argv, t_options *options,
 	nb = argc - 1;
 	while (flag == 1 && nb)
 	{
-		flag = ft_check_options(argv[argc - nb], options);
+		flag = ft_check_options(argv[argc - nb], ls);
 		if (flag)
 			--nb;
 	}
@@ -90,8 +90,8 @@ int		ft_lexer_parser(int argc, char **argv, t_options *options,
 			ft_lstnew(argv[argc - nb], ft_strlen(argv[argc - nb]) + 1));
 		--nb;
 	}
-	ft_chose_sort(options, trees);
-	ft_chose_stat_print(options, trees);
-	ft_three_trees(opr, trees);
+	ft_chose_sort(ls);
+	ft_chose_stat_print(ls);
+	ft_three_trees(ls, opr, trees);
 	return (1);
 }

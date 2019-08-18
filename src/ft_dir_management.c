@@ -6,73 +6,122 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 21:37:44 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/16 16:31:07 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/18 15:45:08 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void	ft_print_files(t_trees_management *trees, t_tree *dir,
-				t_tree *file_tree)
+static void	ft_print_files(t_ls *ls, t_tree *dir, t_tree *file_tree,
+				t_lengths *lengths)
 {
-	if (trees->count_dirs != 1 || trees->count_errors || trees->count_files)
+	if (ls->print_dir_name_flag < 2)
+		ls->print_dir_name_flag = 2;
+	else
 		ft_printf("%s:\n", ((t_entry*)dir->content)->path);
-	ft_printf("%s:\n", ((t_entry*)dir->content)->path);
-	ft_tree_inorder_print(file_tree, trees->fptr_print);
+	ft_tree_inorder_print(file_tree, lengths, ls->fptr_print);
 	closedir(((t_entry*)(dir->content))->stream);
 	ft_printf("\n");
 }
 
-static int	ft_dir_read(t_trees_management *trees, t_options *options, t_tree *dir)
+static void	ft_dir_read_init(t_tree **file_tree, t_tree **subdir_tree,
+				t_entry **file_entry, t_lengths *lengths)
 {
-	t_tree			**file_tree;
-	t_tree			**subdir_tree;
-	t_entry			*file_entry;
-	struct dirent	*file;
-
-	file_tree = (t_tree**)malloc(sizeof(t_tree*));
 	*file_tree = NULL;
-	subdir_tree = (t_tree**)malloc(sizeof(t_tree*));
 	*subdir_tree = NULL;
-	file_entry = NULL;
-	if (!((t_entry*)dir->content)->stream)
-	{
-		ft_print_errors(dir->content);
-		return (1);
-	}
-	while ((file = readdir(((t_entry*)dir->content)->stream)))
-	{
-		if ((!options->a && file->d_name[0] == '.'))
-			continue ;
-		if (!(file_entry = (t_entry*)malloc(sizeof(t_entry))))
-			return (ft_error(e_malloc_error));
-		file_entry->path = ft_strjoin(((t_entry*)dir->content)->path,
-			file->d_name);
-		file_entry->name = ft_strdup(file->d_name);
-		trees->fptr_stat(file_entry->path, &file_entry->info);
-		ft_treeadd(file_tree, ft_treenew_ptr(file_entry), trees->fptr_sort);
-		if (options->r_cap && S_ISDIR(file_entry->info.st_mode))
-		{
-			ft_check_dir_end(&file_entry->path);
-			if (!(file_entry->stream = opendir(file_entry->path)))
-				file_entry->error = strerror(errno);
-			ft_treeadd(subdir_tree,
-				ft_treenew_ptr(file_entry), trees->fptr_sort);
-		}
-	}
-	ft_print_files(trees, dir, *file_tree);
-	if (options->r_cap && *subdir_tree)
-		ft_args_dir_management(trees, options, *subdir_tree);
+	*file_entry = NULL;
+	ft_bzero(lengths, sizeof(t_lengths));
+}
+
+static int	ft_file_entry_init(struct dirent *file,
+				t_entry **file_entry, t_tree *dir)
+{
+	if (!(*file_entry = (t_entry*)malloc(sizeof(t_entry))))
+		return (ft_error(e_malloc_error));
+	ft_bzero(*file_entry, sizeof(t_entry));
+	(*file_entry)->path = ft_strjoin(((t_entry*)dir->content)->path,
+		file->d_name);
+	(*file_entry)->name = ft_strdup(file->d_name);
 	return (1);
 }
 
-int		ft_args_dir_management(t_trees_management *trees, t_options *options,
-		t_tree *dir)
+static void	ft_lengths_update(t_lengths *lengths, t_entry *file_entry)
+{
+	if ((unsigned int)lengths->links_length < ft_nblen(file_entry->info.st_nlink))
+		lengths->links_length = ft_nblen(file_entry->info.st_nlink);
+	if ((unsigned int)lengths->date_length < ft_strlen(file_entry->time.day))
+		lengths->date_length = ft_strlen(file_entry->time.date);
+	if ((unsigned int)lengths->size_length < ft_nblen(file_entry->info.st_size))
+		lengths->size_length = ft_nblen(file_entry->info.st_size);
+	if (file_entry->user_name && (unsigned int)lengths->user_length < ft_strlen(file_entry->user_name))
+		lengths->user_length = ft_strlen(file_entry->user_name);
+	if (file_entry->group_name && (unsigned int)lengths->group_length < ft_strlen(file_entry->group_name))
+		lengths->group_length = ft_strlen(file_entry->group_name);
+}
+
+static int	ft_retrieve_file_infos(t_entry *file_entry)
+{
+	char			**tab;
+	struct passwd	*user;
+	struct group	*group;
+
+	if ((user = getpwuid(file_entry->info.st_uid)))
+	{
+		if ((group = getgrgid(user->pw_gid)))
+			file_entry->group_name = group->gr_name;
+		else
+			file_entry->group_name = NULL;
+		file_entry->user_name = user->pw_name;
+	}
+	else
+		file_entry->user_name = NULL;
+	tab = ft_strsplit(ctime(&file_entry->info.st_ctimespec.tv_sec), ' ');
+	file_entry->time.day = tab[0];
+	file_entry->time.month = tab[1];
+	file_entry->time.date = tab[2];
+	file_entry->time.hour_min_sec = tab[3];
+	file_entry->time.year = tab[4];
+	return (1);
+}
+
+static int	ft_dir_read(t_ls *ls, t_tree *dir)
+{
+	t_tree			*file_tree;
+	t_tree			*subdir_tree;
+	t_entry			*file_entry;
+	struct dirent	*file;
+	t_lengths		lengths;
+
+	if (!((t_entry*)dir->content)->stream)
+	{
+		ft_print_errors(dir->content, NULL);
+		return (1);
+	}
+	ft_dir_read_init(&file_tree, &subdir_tree, &file_entry, &lengths);
+	while ((file = readdir(((t_entry*)dir->content)->stream)))
+	{
+		if ((!ls->options.a && file->d_name[0] == '.'))
+			continue ;
+		ft_file_entry_init(file, &file_entry, dir);
+		ft_file_tree_add(ls, &file_tree, &subdir_tree, file_entry);
+		if (ls->options.l)
+		{
+			ft_retrieve_file_infos(file_entry);
+			ft_lengths_update(&lengths, file_entry);
+		}
+	}
+	ft_print_files(ls, dir, file_tree, &lengths);
+	if (ls->options.r_cap && subdir_tree)
+		ft_args_dir_management(ls, subdir_tree);
+	return (1);
+}
+
+int		ft_args_dir_management(t_ls *ls, t_tree *dir)
 {
 	if (!dir)
 		return (1);
-	ft_args_dir_management(trees, options, dir->left);
-	ft_dir_read(trees, options, dir);
-	ft_args_dir_management(trees, options, dir->right);
+	ft_args_dir_management(ls, dir->left);
+	ft_dir_read(ls, dir);
+	ft_args_dir_management(ls, dir->right);
 	return (1);
 }
