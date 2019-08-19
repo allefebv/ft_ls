@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 17:18:18 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/18 14:51:19 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/19 17:06:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	ft_check_options(char *value, t_ls *ls)
 	return (1);
 }
 
-int		ft_lexer_parser(int argc, char **argv, t_ls *ls,
+int			ft_lexer_parser(int argc, char **argv, t_ls *ls,
 			t_trees_management *trees)
 {
 	int		nb;

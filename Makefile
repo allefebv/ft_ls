@@ -6,7 +6,7 @@
 #    By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/31 12:31:28 by allefebv          #+#    #+#              #
-#    Updated: 2019/08/18 15:14:43 by allefebv         ###   ########.fr        #
+#    Updated: 2019/08/19 18:27:30 by allefebv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
 SRC			=	$(addprefix src/, ft_file_mode.c ft_lexer_parser.c	\
 				ft_dir_management.c ft_error.c main.c				\
 				ft_three_trees.c ft_sorts.c ft_print_tree.c			\
-				utils.c ft_tree_add_manage.c)
+				utils.c ft_tree_add_manage.c ft_long_format.c		\
+				ft_print_long.c)
 
 OBJ			=	$(SRC:src/%.c=obj/%.o)
 OBJDIR		=	obj

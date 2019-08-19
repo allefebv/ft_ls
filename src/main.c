@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 22:25:31 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/18 14:56:17 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/19 17:07:14 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_init_main(t_trees_management *trees, t_ls *ls)
 	ft_bzero(ls, sizeof(t_ls));
 }
 
-int	main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
 	t_options			options;
 	t_trees_management	trees;

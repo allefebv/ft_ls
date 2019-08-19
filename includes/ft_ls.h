@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 12:29:48 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/19 16:02:45 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/19 17:50:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,29 +67,30 @@ typedef struct	s_time
 
 typedef struct	s_entry
 {
-	char		*path;
-	char		*name;
-	char		*error;
-	char		type;
-	t_time		time;
-	char		*user_name;
-	char		*group_name;
-	char		*link;
-	int			major;
-	int			minor;
-	DIR			*stream;
-	struct stat	info;
+	char			*path;
+	char			*name;
+	char			*error;
+	char			type;
+	t_time			time;
+	char			*user_name;
+	char			*group_name;
+	char			*link;
+	int				major;
+	int				minor;
+	DIR				*stream;
+	struct stat		info;
+	struct dirent	*file;
 }				t_entry;
 
 typedef struct	s_lengths
 {
-	int			links_length;
-	int			user_length;
-	int			group_length;
-	int			size_length;
-	int			date_length;
-	int			minor_length;
-	int			major_length;
+	int			links;
+	int			user;
+	int			group;
+	int			size;
+	int			date;
+	int			minor;
+	int			major;
 	int			blocks;
 }				t_lengths;
 
@@ -102,6 +103,7 @@ char	ft_file_mode(mode_t mode);
 int		ft_lexer_parser(int argc, char **argv, t_ls *ls,
 			t_trees_management *trees);
 int		ft_args_dir_management(t_ls *ls, t_tree *dir);
+int		ft_long_format(t_ls *ls, t_entry *file_entry, t_lengths *lengths);
 int		ft_error(t_errors error_type);
 int		ft_three_trees(t_ls *ls, t_list *opr, t_trees_management *trees);
 void	ft_file_tree_add(t_ls *ls, t_tree **file_tree, t_tree **subdir_tree,
@@ -119,5 +121,6 @@ void	ft_print_path_space(void *content, void *additional_content);
 void	ft_print_errors(void *content, void *additional_content);
 
 void	ft_check_dir_end(char **path);
+int		ft_check_date(time_t time_file, t_entry *file_entry);
 
 #endif
