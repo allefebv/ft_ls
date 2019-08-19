@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/13 15:52:14 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/18 15:49:13 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/19 16:30:15 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_print_line_cr(void *content, void *additional_content)
 void	ft_print_line_long(void *content, void *additional_content)
 {
 	(void)additional_content;
-	ft_printf("%c", ft_file_mode(((t_entry*)content)->info.st_mode));
+	ft_printf("%c", (((t_entry*)content)->type));
 	ft_printf((((t_entry*)content)->info.st_mode & S_IRUSR) ? "r" : "-");
 	ft_printf((((t_entry*)content)->info.st_mode & S_IWUSR) ? "w" : "-");
 	ft_printf((((t_entry*)content)->info.st_mode & S_IXUSR) ? "x" : "-");
@@ -37,28 +37,39 @@ void	ft_print_line_long(void *content, void *additional_content)
 	ft_printf((((t_entry*)content)->info.st_mode & S_IROTH) ? "r" : "-");
 	ft_printf((((t_entry*)content)->info.st_mode & S_IWOTH) ? "w" : "-");
 	ft_printf((((t_entry*)content)->info.st_mode & S_IXOTH) ? "x" : "-");
-	ft_printf("%*d", ((t_lengths*)additional_content)->links_length + 1,
+	ft_printf("%*d", ((t_lengths*)additional_content)->links_length + 2,
 		((t_entry*)content)->info.st_nlink);
 	if (((t_entry*)content)->user_name)
-		ft_printf("%*s", ((t_lengths*)additional_content)->user_length + 1,
+		ft_printf(" %-*s", ((t_lengths*)additional_content)->user_length,
 			((t_entry*)content)->user_name);
 	else
-		ft_printf("%*c", ((t_lengths*)additional_content)->user_length + 1,
+		ft_printf(" %*c", ((t_lengths*)additional_content)->user_length,
 			' ');
 	if (((t_entry*)content)->group_name)
-		ft_printf("%*s", ((t_lengths*)additional_content)->group_length + 2,
+		ft_printf("  %-*s", ((t_lengths*)additional_content)->group_length,
 			((t_entry*)content)->group_name);
 	else
-		ft_printf("%*c", ((t_lengths*)additional_content)->group_length + 1,
+		ft_printf("  %*c", ((t_lengths*)additional_content)->group_length,
 			' ');
-	ft_printf("%*d", ((t_lengths*)additional_content)->size_length + 2,
+	if (((t_entry*)content)->type == 'b' || ((t_entry*)content)->type == 'c')
+		ft_printf("%*d,%*d", ((t_lengths*)additional_content)->major_length + 2,
+			((t_entry*)content)->major,
+			((t_lengths*)additional_content)->minor_length + 1,
+			((t_entry*)content)->minor);
+	else
+		ft_printf("%*d", ((t_lengths*)additional_content)->size_length + 2,
 		((t_entry*)content)->info.st_size);
 	ft_printf("%4s", ((t_entry*)content)->time.month);
 	ft_printf("%*s", ((t_lengths*)additional_content)->date_length + 1,
 		((t_entry*)content)->time.date);
-	ft_printf("%6.5s", ((t_entry*)content)->time.hour_min_sec);
+	if (((t_entry*)content)->time.flag_year)
+		ft_printf("%6.4s", ((t_entry*)content)->time.year);
+	else
+		ft_printf("%6.5s", ((t_entry*)content)->time.hour_min_sec);
 	ft_printf("%*s", ft_strlen(((t_entry*)content)->name) + 1,
 		((t_entry*)content)->name);
+	if (((t_entry*)content)->type == 'l')
+		ft_printf(" -> %s", ((t_entry*)content)->link);
 	ft_printf("\n");
 }
 

@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 12:29:48 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/18 15:24:08 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/19 16:02:45 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_LS_H
 
 # include <sys/stat.h>
+# include <sys/types.h>
 # include <pwd.h>
 # include <grp.h>
 # include <uuid/uuid.h>
@@ -24,6 +25,7 @@
 # include "libft.h"
 
 # define OPTIONS "alrtR"
+# define SIX_MONTHS 15778458
 
 typedef struct	s_trees_management
 {
@@ -59,6 +61,7 @@ typedef struct	s_time
 	char		*day;
 	char		*date;
 	char		*hour_min_sec;
+	int			flag_year;
 }				t_time;
 
 
@@ -71,6 +74,9 @@ typedef struct	s_entry
 	t_time		time;
 	char		*user_name;
 	char		*group_name;
+	char		*link;
+	int			major;
+	int			minor;
 	DIR			*stream;
 	struct stat	info;
 }				t_entry;
@@ -82,6 +88,9 @@ typedef struct	s_lengths
 	int			group_length;
 	int			size_length;
 	int			date_length;
+	int			minor_length;
+	int			major_length;
+	int			blocks;
 }				t_lengths;
 
 typedef enum	e_errors
