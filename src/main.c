@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 22:25:31 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/19 17:07:14 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/20 13:59:21 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	ft_init_main(t_trees_management *trees, t_ls *ls)
 	trees->dirs = (t_tree**)malloc(sizeof(t_tree*));
 	*(trees->dirs) = NULL;
 	ft_bzero(ls, sizeof(t_ls));
+	ls->first = 1;
 }
 
 int		main(int argc, char **argv)

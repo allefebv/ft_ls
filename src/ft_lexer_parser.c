@@ -6,24 +6,18 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 17:18:18 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/19 17:06:44 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/21 15:26:37 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void	ft_chose_stat_print(t_ls *ls)
+static void	ft_chose_print(t_ls *ls)
 {
 	if (ls->options.l)
-	{
-		ls->fptr_stat = lstat;
 		ls->fptr_print = ft_print_line_long;
-	}
 	else
-	{
-		ls->fptr_stat = stat;
 		ls->fptr_print = ft_print_line_cr;
-	}
 }
 
 static void	ft_chose_sort(t_ls *ls)
@@ -43,10 +37,10 @@ static int	ft_check_options(char *value, t_ls *ls)
 	int	i;
 
 	i = 0;
-	if (value[i++] != '-')
+	if (value[i++] != '-' || value[i] == 0)
 		return (0);
 	if (value[i] == '-')
-		return (0);
+		return (-2);
 	while (value[i] != 0 && ft_strnchr(OPTIONS, value[i], ft_strlen(OPTIONS)))
 	{
 		if (value[i] == 'a')
@@ -76,7 +70,7 @@ int			ft_lexer_parser(int argc, char **argv, t_ls *ls,
 	opr = NULL;
 	flag = 1;
 	nb = argc - 1;
-	while (flag == 1 && nb)
+	while (flag > 0 && nb)
 	{
 		flag = ft_check_options(argv[argc - nb], ls);
 		if (flag)
@@ -91,7 +85,7 @@ int			ft_lexer_parser(int argc, char **argv, t_ls *ls,
 		--nb;
 	}
 	ft_chose_sort(ls);
-	ft_chose_stat_print(ls);
+	ft_chose_print(ls);
 	ft_three_trees(ls, opr, trees);
 	return (1);
 }

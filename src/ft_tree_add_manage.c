@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/18 10:10:02 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/19 17:59:16 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/21 16:36:58 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@ static int	ft_check_dir(char *name)
 
 static void	ft_cap_r_tree(t_ls *ls, t_entry *file_entry, t_tree **subdir_tree)
 {
-	ft_check_dir_end(&file_entry->path);
-	if (!(file_entry->stream = opendir(file_entry->path)))
-		file_entry->error = strerror(errno);
 	ft_treeadd(subdir_tree,
 		ft_treenew_ptr(file_entry), ls->fptr_sort);
 }

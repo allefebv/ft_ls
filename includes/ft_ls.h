@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 12:29:48 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/19 17:50:43 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/21 14:41:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ typedef struct	s_ls
 	int			print_dir_name_flag;
 	int			is_arg_error_tree;
 	int			is_arg_files_tree;
+	int			first;
 	int			(*fptr_sort)(void*, void*);
-	int			(*fptr_stat)(const char*, struct stat*);
 	void		(*fptr_print)(void*, void*);
 }				t_ls;
 
@@ -120,7 +120,6 @@ void	ft_print_line_cr(void *content, void *additional_content);
 void	ft_print_path_space(void *content, void *additional_content);
 void	ft_print_errors(void *content, void *additional_content);
 
-void	ft_check_dir_end(char **path);
 int		ft_check_date(time_t time_file, t_entry *file_entry);
 
 #endif

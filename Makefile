@@ -6,7 +6,7 @@
 #    By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/31 12:31:28 by allefebv          #+#    #+#              #
-#    Updated: 2019/08/19 18:27:30 by allefebv         ###   ########.fr        #
+#    Updated: 2019/08/21 15:20:07 by allefebv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ RM			=	rm -rf
 INCLUDES	=	-I ./includes -I ./libft/includes
 CC			=	gcc
 #CFLAGS		=	-Wall -Wextra -Werror
-CFLAGS		=	-Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS		=	-Wall -Wextra -Werror
 
 SRC			=	$(addprefix src/, ft_file_mode.c ft_lexer_parser.c	\
 				ft_dir_management.c ft_error.c main.c				\

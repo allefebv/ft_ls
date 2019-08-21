@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/19 18:11:11 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/19 19:08:56 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/21 14:41:39 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,14 @@ void	ft_rights_str(char *rights, t_entry *entry)
 	rights[7] = (entry->info.st_mode & S_IROTH) ? 'r' : '-';
 	rights[8] = (entry->info.st_mode & S_IWOTH) ? 'w' : '-';
 	rights[9] = (entry->info.st_mode & S_IXOTH) ? 'x' : '-';
+	if (entry->info.st_mode & S_ISVTX)
+	{
+		if (rights[9] == 'x')
+			rights[9] = 't';
+		else
+			rights[9] = 'T';
+	}
+	rights[10] = '\0';
 }
 
 void	ft_user_group_str(t_entry *entry, t_lengths *lengths)
@@ -56,8 +64,8 @@ void	ft_year_time_str(t_entry *entry, char **year_time)
 
 void	ft_print_line_long(void *content, void *additional_content)
 {
-	char 		rights[10];
-	char 		*year_time;
+	char		rights[11];
+	char		*year_time;
 	t_entry		*entry;
 	t_lengths	*lengths;
 
@@ -66,8 +74,9 @@ void	ft_print_line_long(void *content, void *additional_content)
 	ft_rights_str(rights, entry);
 	ft_user_group_str(entry, lengths);
 	ft_year_time_str(entry, &year_time);
-	ft_printf("%*d %-*s  %-*s", lengths->links+ 2, entry->info.st_nlink,
-		lengths->user, entry->user_name, lengths->group, entry->group_name);
+	ft_printf("%s%*d %-*s  %-*s", rights, lengths->links+ 2,
+		entry->info.st_nlink, lengths->user, entry->user_name,
+		lengths->group, entry->group_name);
 	if (entry->type == 'b' || entry->type == 'c')
 		ft_printf("%*d,%*d", lengths->major+ 2, entry->major,
 			lengths->minor+ 1, entry->minor);
