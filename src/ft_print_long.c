@@ -6,13 +6,13 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/19 18:11:11 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/21 14:41:39 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/22 21:46:18 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	ft_rights_str(char *rights, t_entry *entry)
+static void	ft_rights_str(char *rights, t_entry *entry)
 {
 	rights[0] = entry->type;
 	rights[1] = (entry->info.st_mode & S_IRUSR) ? 'r' : '-';
@@ -34,21 +34,24 @@ void	ft_rights_str(char *rights, t_entry *entry)
 	rights[10] = '\0';
 }
 
-void	ft_user_group_str(t_entry *entry, t_lengths *lengths)
+static int	ft_user_group_str(t_entry *entry, t_lengths *lengths)
 {
 	if (!entry->user_name)
 	{
-		entry->user_name = ft_strnew(lengths->user);
+		if (!(entry->user_name = ft_strnew(lengths->user)))
+			return (0);
 		ft_memset(entry->user_name, ' ', lengths->user);
 	}
 	if (!entry->group_name)
 	{
-		entry->group_name = ft_strnew(lengths->group);
+		if (!(entry->group_name = ft_strnew(lengths->group)))
+			return (0);
 		ft_memset(entry->group_name, ' ', lengths->group);
 	}
+	return (1);
 }
 
-void	ft_year_time_str(t_entry *entry, char **year_time)
+static void	ft_year_time_str(t_entry *entry, char **year_time)
 {
 	if (entry->time.flag_year)
 	{
@@ -62,7 +65,7 @@ void	ft_year_time_str(t_entry *entry, char **year_time)
 	}
 }
 
-void	ft_print_line_long(void *content, void *additional_content)
+void		ft_print_line_long(void *content, void *additional_content)
 {
 	char		rights[11];
 	char		*year_time;
@@ -72,7 +75,8 @@ void	ft_print_line_long(void *content, void *additional_content)
 	entry = (t_entry*)content;
 	lengths = (t_lengths*)additional_content;
 	ft_rights_str(rights, entry);
-	ft_user_group_str(entry, lengths);
+	if (!(ft_user_group_str(entry, lengths)))
+		return ;
 	ft_year_time_str(entry, &year_time);
 	ft_printf("%s%*d %-*s  %-*s", rights, lengths->links+ 2,
 		entry->info.st_nlink, lengths->user, entry->user_name,
@@ -82,8 +86,7 @@ void	ft_print_line_long(void *content, void *additional_content)
 			lengths->minor+ 1, entry->minor);
 	else
 		ft_printf("%*d", lengths->size+ 2, entry->info.st_size);
-	ft_printf("%4s%*s%6s%*s", entry->time.month,
-		lengths->date + 1, entry->time.date, year_time,
+	ft_printf("%4s%3s%6s%*s", entry->time.month, entry->time.date, year_time,
 		ft_strlen(entry->name) + 1, entry->name);
 	if (((t_entry*)content)->type == 'l')
 		ft_printf(" -> %s", ((t_entry*)content)->link);

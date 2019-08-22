@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 17:18:18 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/21 15:26:37 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/22 21:45:09 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,14 @@ static int	ft_check_options(char *value, t_ls *ls)
 	return (1);
 }
 
+static int	ft_opr_list_create(t_list **opr, char **argv, int argc, int *nb)
+{
+	if (!(ft_lstadd_end(opr,
+		ft_lstnew(argv[argc - *nb], ft_strlen(argv[argc - (*nb)--]) + 1))))
+		return (ft_error(e_malloc_error));
+	return (1);
+}
+
 int			ft_lexer_parser(int argc, char **argv, t_ls *ls,
 			t_trees_management *trees)
 {
@@ -79,13 +87,11 @@ int			ft_lexer_parser(int argc, char **argv, t_ls *ls,
 	if (flag == -1)
 		return (0);
 	while (nb)
-	{
-		ft_lstadd_end(&opr,
-			ft_lstnew(argv[argc - nb], ft_strlen(argv[argc - nb]) + 1));
-		--nb;
-	}
+		if (!(ft_opr_list_create(&opr, argv, argc, &nb)))
+			return (ft_error(e_no_print));
 	ft_chose_sort(ls);
 	ft_chose_print(ls);
-	ft_three_trees(ls, opr, trees);
+	if (!(ft_three_trees(ls, opr, trees)))
+		return (ft_error(e_no_print));
 	return (1);
 }

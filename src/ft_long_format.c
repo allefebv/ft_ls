@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/19 17:01:10 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/19 17:51:47 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/22 21:36:32 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static int	ft_retrieve_specific(t_entry *file_entry)
 {
 	if (file_entry->type == 'l')
 	{
-		file_entry->link = ft_strnew(file_entry->info.st_size + 1);
+		if (!(file_entry->link = ft_strnew(file_entry->info.st_size + 1)))
+			return (ft_error(e_malloc_error));
 		readlink(file_entry->path, file_entry->link,
 			file_entry->info.st_size + 1);
 	}
@@ -67,7 +68,8 @@ static int	ft_retrieve_file_infos(t_entry *file_entry)
 		file_entry->group_name = group->gr_name;
 	else
 		file_entry->group_name = NULL;
-	tab = ft_strsplit(ctime(&file_entry->info.st_mtimespec.tv_sec), ' ');
+	if (!(tab = ft_strsplit(ctime(&file_entry->info.st_mtimespec.tv_sec), ' ')))
+		return (ft_error(e_malloc_error));
 	file_entry->time.day = tab[0];
 	file_entry->time.month = tab[1];
 	file_entry->time.date = tab[2];
@@ -75,7 +77,8 @@ static int	ft_retrieve_file_infos(t_entry *file_entry)
 		file_entry->time.hour_min_sec = tab[3];
 	else
 		file_entry->time.year = tab[4];
-	ft_retrieve_specific(file_entry);
+	if (!(ft_retrieve_specific(file_entry)))
+		return (ft_error(e_no_print));
 	return (1);
 }
 
@@ -84,7 +87,8 @@ int			ft_long_format(t_ls *ls, t_entry *file_entry, t_lengths *lengths)
 	if (ls->options.l)
 	{
 		file_entry->type = ft_file_mode((file_entry->info.st_mode));
-		ft_retrieve_file_infos(file_entry);
+		if (!(ft_retrieve_file_infos(file_entry)))
+			return (ft_error(e_no_print));
 		ft_lengths_update(lengths, file_entry);
 	}
 	return (1);
