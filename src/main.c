@@ -6,15 +6,27 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/24 22:25:31 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/22 21:44:27 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/23 12:50:47 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 #include "stdio.h"
 
-int	ft_init_main(t_trees_management *trees, t_ls *ls)
+static int	ft_end_main(t_trees_management trees, int ret_val)
 {
+	ft_treedel(trees.dirs, ft_free_entry);
+	free(trees.dirs);
+	ft_treedel(trees.errors, ft_free_entry);
+	free(trees.errors);
+	ft_treedel(trees.files, ft_free_entry);
+	free(trees.files);
+	return (ret_val);
+}
+
+static int	ft_init_main(t_trees_management *trees, t_ls *ls)
+{
+	ft_bzero(trees, sizeof(t_trees_management));
 	if (!(trees->errors = (t_tree**)malloc(sizeof(t_tree*))))
 		return (ft_error(e_malloc_error));
 	*(trees->errors) = NULL;
@@ -36,11 +48,11 @@ int	main(int argc, char **argv)
 	t_ls				ls;
 
 	if (!(ft_init_main(&trees, &ls)))
-		return (ft_error(e_no_print));
+		return (ft_end_main(trees, -1));
 	ft_bzero(&options, sizeof(t_options));
 	if (!ft_lexer_parser(argc, argv, &ls, &trees))
-		return (ft_error(e_no_print));
+		return (ft_end_main(trees, -1));
 	if (!(ft_dir_tree_browse(&ls, *trees.dirs)))
-		return (ft_error(e_no_print));
-	return (0);
+		return (ft_end_main(trees, -1));
+	return (ft_end_main(trees, 0));
 }

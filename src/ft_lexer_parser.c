@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 17:18:18 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/22 21:45:09 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/23 12:33:06 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,15 @@ static void	ft_chose_sort(t_ls *ls)
 		ls->fptr_sort = ft_rev_name_sort;
 	else
 		ls->fptr_sort = ft_name_sort;
+}
+
+static void	ft_chose_del(t_ls *ls)
+{
+	if (ls->options.r_cap)
+		ls->fptr_del = ft_free_entry_no_d;
+	else
+		ls->fptr_del = ft_free_entry;
+
 }
 
 static int	ft_check_options(char *value, t_ls *ls)
@@ -68,6 +77,12 @@ static int	ft_opr_list_create(t_list **opr, char **argv, int argc, int *nb)
 	return (1);
 }
 
+static int	ft_end_lexer(t_list *opr, int ret_value)
+{
+	ft_lstdel(&opr, ft_free_opr);
+	return (ret_value);
+}
+
 int			ft_lexer_parser(int argc, char **argv, t_ls *ls,
 			t_trees_management *trees)
 {
@@ -88,10 +103,11 @@ int			ft_lexer_parser(int argc, char **argv, t_ls *ls,
 		return (0);
 	while (nb)
 		if (!(ft_opr_list_create(&opr, argv, argc, &nb)))
-			return (ft_error(e_no_print));
+			return (ft_end_lexer(opr, 0));
 	ft_chose_sort(ls);
 	ft_chose_print(ls);
+	ft_chose_del(ls);
 	if (!(ft_three_trees(ls, opr, trees)))
-		return (ft_error(e_no_print));
-	return (1);
+		return (ft_end_lexer(opr, 0));
+	return (ft_end_lexer(opr, 1));
 }

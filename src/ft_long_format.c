@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/19 17:01:10 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/22 21:36:32 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/23 12:51:31 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int			ft_long_format(t_ls *ls, t_entry *file_entry, t_lengths *lengths)
 {
 	if (ls->options.l)
 	{
-		file_entry->type = ft_file_mode((file_entry->info.st_mode));
 		if (!(ft_retrieve_file_infos(file_entry)))
 			return (ft_error(e_no_print));
 		ft_lengths_update(lengths, file_entry);

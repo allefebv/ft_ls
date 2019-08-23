@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 12:29:48 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/22 21:25:41 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/23 12:32:30 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct	s_ls
 	int			first;
 	int			(*fptr_sort)(void*, void*);
 	void		(*fptr_print)(void*, void*);
+	void		(*fptr_del)(void *, size_t size);
 }				t_ls;
 
 typedef struct	s_time
@@ -79,7 +80,6 @@ typedef struct	s_entry
 	int				minor;
 	DIR				*stream;
 	struct stat		info;
-	struct dirent	*file;
 }				t_entry;
 
 typedef struct	s_lengths
@@ -125,5 +125,8 @@ void	ft_print_files(t_ls *ls, t_tree *dir, t_tree *file_tree,
 			t_lengths *lengths);
 
 int		ft_check_date(time_t time_file, t_entry *file_entry);
+void	ft_free_entry(void *content, size_t size);
+void	ft_free_entry_no_d(void *content, size_t size);
+void	ft_free_opr(void *content, size_t size);
 
 #endif

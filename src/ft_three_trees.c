@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/13 11:43:53 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/22 21:45:48 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/23 12:58:02 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ static int	ft_entry_init(t_entry **entry, t_list *opr)
 {
 	if (!(*entry = (t_entry*)ft_memalloc(sizeof(t_entry))))
 		return (ft_error(e_malloc_error));
-	(*entry)->path = (char*)opr->content;
+	ft_bzero(*entry, sizeof(t_entry));
+	(*entry)->path = ft_strdup((char*)opr->content);
 	if (!((*entry)->name = ft_strdup((*entry)->path)))
 		return (ft_error(e_malloc_error));
 	return (1);
