@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 15:11:48 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/23 13:01:12 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/27 14:26:17 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,13 @@ void	ft_free_entry(void *content, size_t size)
 	ft_strdel(&entry->path);
 	ft_strdel(&entry->name);
 	ft_strdel(&entry->link);
+	ft_strdel(&entry->group_name);
+	ft_strdel(&entry->user_name);
+	ft_strdel(&entry->time.day);
+	ft_strdel(&entry->time.month);
+	ft_strdel(&entry->time.date);
+	ft_strdel(&entry->time.hour_min_sec);
+	ft_strdel(&entry->time.year);
 	free(content);
 }
 
@@ -41,7 +48,8 @@ void	ft_free_entry_no_d(void *content, size_t size)
 
 	(void)size;
 	entry = (t_entry*)content;
-	if (entry->type != 'd')
+	if (entry->type != 'd' || ft_strequ(entry->name, ".")
+		|| ft_strequ(entry->name, ".."))
 		ft_free_entry(content, size);
 }
 

@@ -6,50 +6,34 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/13 11:43:53 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/23 12:58:02 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/27 19:28:19 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static int	ft_error_tree(t_ls *ls, t_entry *entry, t_trees_management *trees)
-{
-	entry->error = strerror(errno);
-	if (!(ft_br_treeadd(trees->errors, ft_treenew_ptr(entry), ft_name_sort)))
-		return (ft_error(e_malloc_error));
-	ls->print_dir_name_flag = 2;
-	ls->is_arg_error_tree = 1;
-	return (1);
-}
-
-static int	ft_file_tree(t_ls *ls, t_entry *entry, t_trees_management *trees,
-				t_lengths *lengths)
-{
-	if (!(ft_long_format(ls, entry, lengths)))
-		return (ft_error(e_no_print));
-	if (!(ft_br_treeadd(trees->files, ft_treenew_ptr(entry), ls->fptr_sort)))
-		return (ft_error(e_malloc_error));
-	ls->print_dir_name_flag = 2;
-	ls->is_arg_files_tree = 1;
-	return (1);
-}
-
-static int	ft_dir_tree(t_ls *ls, t_entry *entry, t_trees_management *trees)
-{
-	if (!(ft_br_treeadd(trees->dirs, ft_treenew_ptr(entry), ls->fptr_sort)))
-		return (ft_error(e_malloc_error));
-	(ls->print_dir_name_flag)++;
-	return (1);
-}
-
 static int	ft_entry_init(t_entry **entry, t_list *opr)
 {
 	if (!(*entry = (t_entry*)ft_memalloc(sizeof(t_entry))))
-		return (ft_error(e_malloc_error));
+		return (ft_error(e_malloc_error, NULL));
 	ft_bzero(*entry, sizeof(t_entry));
 	(*entry)->path = ft_strdup((char*)opr->content);
 	if (!((*entry)->name = ft_strdup((*entry)->path)))
-		return (ft_error(e_malloc_error));
+		return (ft_error(e_malloc_error, NULL));
+	return (1);
+}
+
+static int	ft_opr_file_dir(t_entry *entry, t_ls *ls, t_trees_management *trees,
+				t_lengths *lengths)
+{
+	entry->type = ft_file_mode((entry->info.st_mode));
+	if (S_ISDIR(entry->info.st_mode))
+	{
+		if (!(ft_dir_tree(ls, entry, trees)))
+			return (ft_error(e_no_print, NULL));
+	}
+	else if (!(ft_file_tree(ls, entry, trees, lengths)))
+		return (ft_error(e_no_print, NULL));
 	return (1);
 }
 
@@ -62,22 +46,14 @@ static int	ft_opr(t_ls *ls, t_list *opr, t_trees_management *trees,
 	while (opr)
 	{
 		if (!(ft_entry_init(&entry, opr)))
-			return (ft_error(e_no_print));
-		if (lstat(entry->path, &entry->info))
+			return (ft_error(e_no_print, NULL));
+		if (ls->fptr_stat(entry->path, &entry->info))
 		{
 			if (!(ft_error_tree(ls, entry, trees)))
-				return (ft_error(e_no_print));
+				return (ft_error(e_no_print, NULL));
 		}
-		else
-		{
-			if (S_ISDIR(entry->info.st_mode))
-			{
-				if (!(ft_dir_tree(ls, entry, trees)))
-					return (ft_error(e_no_print));
-			}
-			else if (!(ft_file_tree(ls, entry, trees, lengths)))
-				return (ft_error(e_no_print));
-		}
+		else if (!ft_opr_file_dir(entry, ls, trees, lengths))
+			return (ft_error(e_no_print, NULL));
 		opr = opr->next;
 	}
 	return (1);
@@ -93,21 +69,21 @@ int			ft_three_trees(t_ls *ls, t_list *opr, t_trees_management *trees)
 	if (opr)
 	{
 		if (!(ft_opr(ls, opr, trees, &lengths)))
-			return (ft_error(e_no_print));
+			return (ft_error(e_no_print, NULL));
 	}
 	else
 	{
 		if (!(entry = (t_entry*)ft_memalloc(sizeof(t_entry))))
-			return (ft_error(e_malloc_error));
+			return (ft_error(e_malloc_error, NULL));
 		if (!(entry->path = ft_strdup(".")))
-			return (ft_error(e_malloc_error));
+			return (ft_error(e_malloc_error, NULL));
 		lstat(entry->path, &entry->info);
 		if (!(ft_dir_tree(ls, entry, trees)))
-			return (ft_error(e_no_print));
+			return (ft_error(e_no_print, NULL));
 	}
 	if (ls->is_arg_error_tree)
 		ft_tree_inorder_print(*trees->errors, NULL, ft_print_errors);
-	if (ls->is_arg_files_tree)
+	if (ls->is_arg_files_tree && !(ls->first = 0))
 		ft_tree_inorder_print(*trees->files, &lengths, ls->fptr_print);
 	return (1);
 }

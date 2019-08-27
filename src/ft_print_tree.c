@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/13 15:52:14 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/22 21:26:20 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/27 19:18:23 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ void	ft_print_errors(void *content, void *additional_content)
 
 void	ft_print_open_error(void *content, void *additional_content)
 {
-	(void)additional_content;
-	ft_printf("%s:\n", (char*)((t_entry*)(content))->path);
+	if (!((t_ls*)additional_content)->first)
+		ft_printf("\n");
+	((t_ls*)additional_content)->first = 0;
+	if (((t_ls*)additional_content)->print_dir_name_flag > 1)
+		ft_printf("%s:\n", (char*)((t_entry*)(content))->path);
 	ft_putstr_fd("ls: ", 2);
 	ft_putstr_fd((char*)((t_entry*)(content))->name, 2);
 	ft_putstr_fd(": ", 2);
