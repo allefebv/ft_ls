@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/19 17:01:10 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/28 12:07:05 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/28 14:07:43 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,11 @@ static int	ft_retrieve_file_infos(t_entry *file_entry)
 	if ((user = getpwuid(file_entry->info.st_uid)))
 		file_entry->user_name = ft_strdup(user->pw_name);
 	else
-		file_entry->user_name = NULL;
+		file_entry->user_name = ft_itoa(file_entry->info.st_uid);
 	if ((group = getgrgid(file_entry->info.st_gid)))
 		file_entry->group_name = ft_strdup(group->gr_name);
 	else
-		file_entry->group_name = NULL;
+		file_entry->group_name = ft_itoa(file_entry->info.st_gid);
 	if (!(tab = ft_strsplit(ctime(&file_entry->info.st_mtimespec.tv_sec), ' ')))
 		return (ft_error(e_malloc_error, NULL));
 	ft_group_user_info(file_entry, tab);
