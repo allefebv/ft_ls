@@ -6,7 +6,7 @@
 #    By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/31 12:31:28 by allefebv          #+#    #+#              #
-#    Updated: 2019/08/28 13:21:00 by allefebv         ###   ########.fr        #
+#    Updated: 2019/08/28 15:34:45 by allefebv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ RM			=	rm -rf
 INCLUDES	=	-I ./includes -I ./libft/includes
 CC			=	gcc
 CFLAGS		=	-Wall -Wextra -Werror $(INCLUDES)
+
 SRC			=	$(addprefix src/, ft_file_mode.c ft_lexer_parser.c	\
 				ft_dir_management.c ft_error.c main.c				\
 				ft_three_trees.c ft_sorts.c ft_print_tree.c			\
