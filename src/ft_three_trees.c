@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/13 11:43:53 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/28 12:42:38 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/28 14:17:51 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ static int	ft_opr(t_ls *ls, t_list *opr, t_trees_management *trees,
 			{
 				if (!(ft_error_tree(ls, entry, trees)))
 					return (ft_error(e_no_print, NULL));
-				return (1);
+				opr = opr->next;
+				continue ;
 			}
 		}
 		if (!ft_opr_file_dir(entry, ls, trees, lengths))
