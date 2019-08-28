@@ -1,7 +1,0 @@
-Structure qui compte les tailles max pour l'affichage -l (attention, besoin de transmettre a la fonction de print)
--> Possibilite d'ajouter une variable aux prints. Pour le print long on aura ainsi les tailles max necessaires.
-
-Affichage -l
-Affichage -R
-
-Pour le -R : Besoin d'un second arbre binaire ne stockant que les directories.

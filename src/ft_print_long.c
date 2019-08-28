@@ -6,7 +6,7 @@
 /*   By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/19 18:11:11 by allefebv          #+#    #+#             */
-/*   Updated: 2019/08/27 19:18:25 by allefebv         ###   ########.fr       */
+/*   Updated: 2019/08/28 12:17:44 by allefebv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,14 @@ void		ft_print_line_long(void *content, void *additional_content)
 	if (!(ft_user_group_str(entry, lengths)))
 		return ;
 	ft_year_time_str(entry, &year_time);
-	ft_printf("%s %*d %-*s  %-*s", rights, lengths->links,
+	ft_printf("%s %*d %-*s  %-*s  ", rights, lengths->links,
 		entry->info.st_nlink, lengths->user, entry->user_name,
 		lengths->group, entry->group_name);
 	if (entry->type == 'b' || entry->type == 'c')
-		ft_printf("%*d,%*d", lengths->major + 2, entry->major,
+		ft_printf("%*d,%*d", lengths->major + 1, entry->major,
 			lengths->minor + 1, entry->minor);
 	else
-		ft_printf("%*d", lengths->size + 2, entry->info.st_size);
+		ft_printf("%*d", lengths->size, entry->info.st_size);
 	ft_printf("%4s%3s%*s%*s", entry->time.month, entry->time.date,
 		entry->time.year_padding, year_time, ft_strlen(entry->name) + 1,
 		entry->name);
