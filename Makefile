@@ -6,7 +6,7 @@
 #    By: allefebv <allefebv@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/31 12:31:28 by allefebv          #+#    #+#              #
-#    Updated: 2019/08/28 12:48:43 by allefebv         ###   ########.fr        #
+#    Updated: 2019/08/28 13:21:00 by allefebv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,17 +30,20 @@ libft:
 	make -C libft/
 
 $(NAME): $(OBJ)
+	echo "made ft_ls"
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIB)
 
 clean:
 	$(RM) $(OBJ)
+	echo "cleaned ft_ls"
 	make clean -C libft/
 
 fclean: clean
 	$(RM) $(NAME)
+	echo "fcleaned ft_ls"
 	make fclean -C libft/
 
 re: fclean all
 
-.PHONY: libft src
-.SILENT: libft
+.PHONY: libft src 
+.SILENT: libft $(OBJ) $(NAME) all clean fclean re
